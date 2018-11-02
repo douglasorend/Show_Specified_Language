@@ -3,14 +3,97 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:ShowSpecLang</id>
 <name>Show Only Specified Language</name>
-<version>1.1</version>
+<version>2.0</version>
 
 <file name="$sourcedir/Display.php">
 	<operation>
 		<search position="after"><![CDATA[if (empty($options['view_newest_first']))
 		$counter++;]]></search>
-		<add><![CDATA[SLBBC_prepareDisplayContext($output, $message);
+		<add><![CDATA[SOSL_prepareDisplayContext($output, $message);
 
+	]]></add>
+	</operation>
+</file>
+<file name="$themedir/Display.template.php">
+	<operation>
+		<search position="before"><![CDATA[', $txt['logged'];]]></search>
+		<add><![CDATA[
+
+		// Maybe they can change the displayed language of the post?
+		if (!empty($message['SOSL_lang']))
+		{
+			echo '
+								<select id="SOSL_msg', $message['id'], '" onChange="return SOSL_change(this);" >';
+			foreach ($message['SOSL_lang'] as $lang)
+				echo '
+									<option value="SOSL_', $message['id'], '_' . $lang . '"', ($message['SOSL_primary'] == $lang ? ' selected="selected"' : ''), '>', SOSL_langName($lang), '</option>';
+			echo '
+								</select>
+								<script type="text/javascript">
+									document.getElementById("SOSL_msg', $message['id'], '").value = "SOSL_', $message['id'], '_', $message['SOSL_primary'], '";
+								</script>';
+		}]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[';
+
+	if (!empty($options['display_quick_reply']))]]></search>
+		<add><![CDATA[
+					function SOSL_change(obj)
+					{
+						var value = obj.options[obj.selectedIndex].value;
+						var list = obj.options;
+						for (var x = 0; x < list.length; x++)
+						{
+							var elements = document.getElementsByClassName(list[x].value);
+							for (var y = 0; y < elements.length; y++)
+							{
+								elements[y].style.display = (list[x].value == value ? "" : "none");
+							}
+						}
+					}]]></add>
+	</operation>
+</file>
+<file name="$themedir/GenericControls.template.php">
+	<operation>
+		<search position="after"><![CDATA[// Print a drop down list for all the colors we allow!]]></search>
+		<add><![CDATA[// Print a drop down list for the selectable languages!
+					if (1 == 1)
+					{
+						$langs = SOSL_langName();
+						echo ',
+							{
+								sType: \'select\',
+								sName: \'sel_lang\',
+								oOptions: {
+									\'\': ', JavaScriptEscape($txt['SOSL_change_lang']);
+						foreach ($langs as $code => $lang)
+							echo ',
+									\'', $code, '\': ', JavaScriptEscape($lang);
+						echo '
+								}
+							}';
+					}
+
+					]]></add>
+	</operation>
+</file>
+<file name="$themedir/scripts/editor.js">
+	<operation>
+		<search position="after"><![CDATA[// Or color even?]]></search>
+		<add><![CDATA[// Or language even?
+	else if (oSelectProperties.sName == 'sel_lang')
+	{
+		// Are we in boring mode?
+		if (!this.bRichTextEnabled)
+		{
+			surroundText('[lang=' + sValue + ']', '[/lang]', this.oTextHandle);
+			oSelectProperties.oSelect.selectedIndex = 0;
+		}
+
+		else
+			this.smf_execCommand('forecolor', false, sValue);
+	}
 	]]></add>
 	</operation>
 </file>

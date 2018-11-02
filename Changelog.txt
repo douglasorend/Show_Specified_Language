@@ -1,3 +1,8 @@
+v2.0 - December 3rd, 2016
+o Added admin option of selecting default language to view.
+o Added dropdown box in [b]Display.template.php[/b] with available languages in post.
+o SMF 2.0: Added dropdown box on the Post screen with common language codes (RFC 1766-compliant)...
+
 v1.1 - September 20th, 2016
 o Complete rewrite of bbcode code functions.
 o All language sections are now included in the HTML output, except they are hidden.

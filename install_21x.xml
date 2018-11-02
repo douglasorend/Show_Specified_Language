@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:ShowSpecLang</id>
+<name>Show Only Specified Language</name>
+<version>2.0</version>
+
+<file name="$themedir/Display.template.php">
+	<operation>
+		<search position="after"><![CDATA[';
+
+	if (!empty($options['display_quick_mod']) && $options['display_quick_mod'] == 1 && $context['can_remove_post'])]]></search>
+		<add><![CDATA[
+					function SOSL_change(obj)
+					{
+						var value = obj.options[obj.selectedIndex].value;
+						var list = obj.options;
+						for (var x = 0; x < list.length; x++)
+						{
+							var elements = document.getElementsByClassName(list[x].value);
+							for (var y = 0; y < elements.length; y++)
+							{
+								elements[y].style.display = (list[x].value == value ? "" : "none");
+							}
+						}
+					}]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($context['can_report_moderator'] || !empty($context['can_see_likes']) || !empty($context['can_like']) || $message['can_approve'] || $message['can_unapprove'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'] || $context['can_quote'])]]></search>
+		<add><![CDATA[if (!empty($message['SOSL_lang']) || $context['can_report_moderator'] || !empty($context['can_see_likes']) || !empty($context['can_like']) || $message['can_approve'] || $message['can_unapprove'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'] || $context['can_quote'])]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[if ($message['can_approve'] || $message['can_unapprove'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'] || $context['can_quote']]]></search>
+		<add><![CDATA[ || !empty($message['SOSL_lang'])]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg']]]></search>
+		<add><![CDATA[// Maybe they can change the displayed language of the post?
+		if (!empty($message['SOSL_lang']))
+		{
+			echo '
+								&nbsp;<select id="SOSL_msg', $message['id'], '" onChange="return SOSL_change(this);" >';
+			foreach ($message['SOSL_lang'] as $lang)
+				echo '
+									<option value="SOSL_', $message['id'], '_' . $lang . '"', ($message['SOSL_primary'] == $lang ? ' selected="selected"' : ''), '>', SOSL_langName($lang), '</option>';
+			echo '
+								</select>
+								<script type="text/javascript">
+									document.getElementById("SOSL_msg', $message['id'], '").value = "SOSL_', $message['id'], '_', $message['SOSL_primary'], '";
+								</script>';
+		}
+
+		if ($message['can_approve'] || $context['can_reply'] || $message['can_modify'] || $message['can_remove'] || $context['can_split'] || $context['can_restore_msg'] || !empty($message['SOSL_lang'])]]></add>
+	</operation>
+</file>
+</modification>
