@@ -23,9 +23,9 @@ $hook_functions = array(
 // SMF 2.0+ hooks:
 	'integrate_pre_include' => '$sourcedir/Subs-SOSL.php',
 	'integrate_bbc_codes' => 'SOSL_BBCode',
-	'integrate_general_mod_settings' => 'SOSL_Settings',
 // SMF 2.1 hooks:
 	'integrate_prepare_display_context' => 'SOSL_prepareDisplayContext',
+	'integrate_modify_post_settings' => 'SOSL_Settings',
 );
 
 // Adding or removing them?

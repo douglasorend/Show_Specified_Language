@@ -3,7 +3,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:ShowSpecLang</id>
 <name>Show Only Specified Language</name>
-<version>2.0</version>
+<version>2.1</version>
 
 <file name="$sourcedir/Display.php">
 	<operation>
@@ -14,13 +14,24 @@
 	]]></add>
 	</operation>
 </file>
+<file name="$sourcedir/ManagePosts.php">
+	<operation>
+		<search position="after"><![CDATA[
+	if ($return_config)
+		return $config_vars;
+
+	// We'll want this for our easy save.]]></search>
+		<add><![CDATA[	SOSL_Settings($config_vars);
+]]></add>
+	</operation>
+</file>
 <file name="$themedir/Display.template.php">
 	<operation>
 		<search position="before"><![CDATA[', $txt['logged'];]]></search>
 		<add><![CDATA[
 
 		// Maybe they can change the displayed language of the post?
-		if (!empty($message['SOSL_lang']))
+		if (!empty($message['SOSL_lang']) && count($message['SOSL_lang']) > 1)
 		{
 			echo '
 								<select id="SOSL_msg', $message['id'], '" onChange="return SOSL_change(this);" >';
@@ -56,6 +67,10 @@
 </file>
 <file name="$themedir/GenericControls.template.php">
 	<operation>
+		<search position="before"><![CDATA[global $context, $settings, $options, $txt, $modSettings, $scripturl]]></search>
+		<add><![CDATA[, $smcFunc]]></add>
+	</operation>
+	<operation>
 		<search position="after"><![CDATA[// Print a drop down list for all the colors we allow!]]></search>
 		<add><![CDATA[// Print a drop down list for the selectable languages!
 					if (1 == 1)
@@ -69,7 +84,7 @@
 									\'\': ', JavaScriptEscape($txt['SOSL_change_lang']);
 						foreach ($langs as $code => $lang)
 							echo ',
-									\'', $code, '\': ', JavaScriptEscape($lang);
+									\'', !empty($modSettings['SOSL_natural']) ? $smcFunc['strtolower']($lang) : $code, '\': ', JavaScriptEscape($lang);
 						echo '
 								}
 							}';
@@ -87,7 +102,7 @@
 		// Are we in boring mode?
 		if (!this.bRichTextEnabled)
 		{
-			surroundText('[lang=' + sValue + ']', '[/lang]', this.oTextHandle);
+			surroundText('[language=' + sValue + ']', '[/language]', this.oTextHandle);
 			oSelectProperties.oSelect.selectedIndex = 0;
 		}
 

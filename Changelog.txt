@@ -1,3 +1,12 @@
+v2.1 - April 27th, 2017
+o Removed admin option of selecting default language to view.
+o Added option to show only installed languages to users.
+o Added option to remove sub-language options from view.
+o Added option to use language names instead of RFC 1766 IDs for bbcode button.
+o Added code to resolve natural language names to RFC-1766 IDs.
+o Moved mod settings to [b]Posts and Topics[/b].
+o Fixed code to display selectable languages only if more than one language string is present.
+
 v2.0 - December 3rd, 2016
 o Added admin option of selecting default language to view.
 o Added dropdown box in [b]Display.template.php[/b] with available languages in post.

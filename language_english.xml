@@ -3,14 +3,16 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:ShowSpecLang</id>
 <name>Show Only Specified Language</name>
-<version>2.0</version>
+<version>2.1</version>
 
 <file name="$languagedir/index.english.php">
 	<operation>
 		<search position="end" />
 		<add><![CDATA[
 $txt['SOSL_change_lang'] = 'Viewing Language';
-$txt['SOSL_Default'] = 'Default viewing language for <strong>language</strong> bbcode:';
+$txt['SOSL_no_sublangs'] = 'Allow sub-languages  for <strong>language</strong> bbcode?<div class="smalltext"><strong>NOTE:</strong> Checking this option shows only <strong>en</strong>, not <strong>en-us</strong>...</div>';
+$txt['SOSL_installed'] = 'Show only installed languages for <strong>language</strong> dropdown?';
+$txt['SOSL_natural'] = 'Show natural language IDs instead of RFC-1766 IDs?<div class="smalltext"><strong>NOTE:</strong> Would show <strong>English</strong> instead of <strong>en-us</strong> or <strong>en</strong>...</div>';
 ]]></add>
 	</operation>
 </file>
