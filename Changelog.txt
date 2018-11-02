@@ -1,3 +1,8 @@
+v2.3 - October 15th, 2018
+o No functionality change.
+o Updated documentation to point to new website.
+o Added Russian translation, courtsey of [url=https://www.simplemachines.org/community/index.php?action=profile;u=97557]digger[/url]!
+
 v2.2 - May 1st, 2017
 o Fixed [b]language[/b] tag (without equal sign) to close [b]<div>[/b] definition.
 o Added Spanish Latin translation, courtsey of [url=https://www.simplemachines.org/community/index.php?action=profile;u=322597]Rock Lee[/url]!
