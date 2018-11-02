@@ -3,7 +3,7 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:ShowSpecLang</id>
 <name>Show Only Specified Language</name>
-<version>2.1</version>
+<version>2.2</version>
 
 <file name="$sourcedir/Display.php">
 	<operation>

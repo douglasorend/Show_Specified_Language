@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:ShowSpecLang</id>
+<name>Show Only Specified Language</name>
+<version>2.2</version>
+
+<file name="$languagedir/index.spanish_latin.php" error="Skip" >
+	<operation>
+		<search position="end" />
+		<add><![CDATA[
+$txt['SOSL_change_lang'] = 'Idioma de visualizaci&oacute;n';
+$txt['SOSL_no_sublangs'] = '&iquest;Permitir sub-idiomas para <strong>idioma</strong> bbcode? <div class="smalltext"><strong>NOTA:</strong> Al marcar esta opci&oacute;n solo se muestra <strong>en</strong>, no <strong>en-us</strong>...</div>';
+$txt['SOSL_installed'] = '&iquest;Mostrar solo los idiomas instalados para el men&uacute; desplegable <strong>idioma</strong>?';
+$txt['SOSL_natural'] = '&iquest;Muestra ID de lenguaje natural en lugar de ID de RFC-1766? <div class="smalltext"><strong>NOTA:</strong> Mostraría <strong>Ingl&eacute;s</strong> en lugar de <strong>en-us</strong> o <strong>en</strong>...</div>';
+]]></add>
+	</operation>
+</file>
+
+<file name="$languagedir/index.spanish_latin-utf8.php" error="Skip" >
+	<operation>
+		<search position="end" />
+		<add><![CDATA[
+$txt['SOSL_change_lang'] = 'Idioma de visualización';
+$txt['SOSL_no_sublangs'] = '¿Permitir sub-idiomas para <strong>idioma</strong> bbcode? <div class="smalltext"><strong>NOTA:</strong> Al marcar esta opción solo se muestra <strong>en</strong>, no <strong>en-us</strong>...</div>';
+$txt['SOSL_installed'] = '¿Mostrar solo los idiomas instalados para el menú desplegable <strong>idioma</strong>?';
+$txt['SOSL_natural'] = '¿Muestra ID de lenguaje natural en lugar de ID de RFC-1766?<div class="smalltext"><strong>NOTA:</strong> Mostraría <strong>Inglés </strong> en lugar de <strong>en-us</strong> o <strong>en</strong>...</div>';
+]]></add>
+	</operation>
+</file>
+</modification>

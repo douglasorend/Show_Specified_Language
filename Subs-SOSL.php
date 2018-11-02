@@ -32,7 +32,7 @@ function SOSL_BBCode(&$bbc)
 	$bbc[] = array(
 		'tag' => 'language',
 		'before' => '<div class="SOSL_' . strtolower($txt["lang_dictionary"]) . '">',
-		'after' => '',
+		'after' => '</div>',
 		'trim' => 'outside',
 		'block_level' => true,
 	);
@@ -332,12 +332,17 @@ function SOSL_langName($lang = false, $trans = false)
 		);
 	}
 
-	if (!$cached && !empty($modSettings['SOSL_installed']) || !empty($modSettings['SOSL_no_sublangs']))
+	// Do any special processing of the language list as requested:
+	$no_sublangs = !empty($modSettings['SOSL_no_sublangs']);
+	$installed = !empty($modSettings['SOSL_installed']);
+	if (!$cached && ($installed || $no_sublangs))
 	{
 		if (($cached = cache_get_data('SOSL_languages', 3600)) == null)
 		{
+			$cached = $codes;
+
 			// Are we showing only the installed languages?
-			if (!empty($modSettings['SOSL_installed']))
+			if ($installed)
 			{
 				require_once($sourcedir . '/ManageServer.php');
 				$languages = list_getLanguages();
@@ -345,32 +350,30 @@ function SOSL_langName($lang = false, $trans = false)
 				foreach ($languages as $locale)
 				{
 					$tmp = str_replace('_', '-', $smcFunc['strtolower']($locale['locale']));
-					if (isset($codes[$tmp]))
-						$list[$tmp] = $codes[$tmp];
+					if ($no_sublangs && isset($cached[$tmp]))
+						$list[$tmp] = $cached[$tmp];
 					$tmp = substr($tmp, 0, 2);
-					$list[$tmp] = $codes[$tmp];
+					$list[$tmp] = $cached[$tmp];
 				}
-				$codes = array_intersect($codes, $list);
+				$cached = array_intersect($cached, $list);
 			}
-
 			// Are we allowing sublanguages to be included in the list?
-			if (!empty($modSettings['SOSL_no_sublangs']))
+			elseif ($no_sublangs)
 			{
-				foreach ($codes as $id => $code)
+				foreach ($cached as $id => $code)
 				{
 					if (strpos($id, '-'))
-						unset($codes[$id]);
+						unset($cached[$id]);
 					elseif ($pos = strpos($code, '('))
-						$codes[$id] = substr($code, 0, $pos - 1);
+						$cached[$id] = substr($code, 0, $pos - 1);
 				}
 			}
 
 			// Cache the array results we just built:
-			cache_put_data('SOSL_languages', $codes, 3600);
-			$cached = true;
+			cache_put_data('SOSL_languages', $cached, 3600);
 		}
-		else
-			$codes = $cached;
+		$codes = $cached;
+		$cached = true;
 	}
 
 	// Are we mapping the natural language ID to a RFC 1766 ID?
@@ -388,6 +391,44 @@ function SOSL_langName($lang = false, $trans = false)
 	}
 	// I guess not....  We must be returning the whole array, then.....
 	return $codes;
+}
+
+//=================================================================================
+// Hook function to add AJAX functionality to the forum:
+//=================================================================================
+function SOSL_Actions(&$actions)
+{
+	$actions['SOSL_AJAX'] = array('Subs-SOSL.php', 'SOSL_AJAX');
+}
+
+function SOSL_AJAX()
+{
+	/* STEP 1. let’s create a cookie file */
+	$ckfile = tempnam("/tmp", "CURLCOOKIE");
+
+	/* STEP 2. visit the homepage to set the cookie properly */
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$output = curl_exec($ch);
+
+	$str = ''; 
+	$str_arr = array();
+	foreach($params as $key => $value)
+	{
+		$str_arr[] = urlencode($key) . "=" . urlencode($value);
+	}
+	if (!empty($str_arr))
+		$str = '?' . implode('&', $str_arr);
+
+	/* STEP 3. visit cookiepage.php */
+	$Url = $url . $str;
+	$ch = curl_init($Url);
+	curl_setopt($ch, CURLOPT_COOKIEFILE, $ckfile);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	$output = curl_exec($ch);
+	return $output;
 }
 
 ?>
