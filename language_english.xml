@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+<id>Dougiefresh:ShowSpecLang</id>
+<name>Show Only Specified Language</name>
+<version>1.0</version>
+
+<file name="$languagedir/ManageSettings.english.php">
+	<operation>
+		<search position="end" />
+		<add><![CDATA[
+$txt['SLBBC_Default'] = 'Default language by <strong>language</strong> bbcode:<div class="smalltext">Additional information can be found <a href="http://www.lingoes.net/en/translator/langcode.htm">here</a>!</div>';
+]]></add>
+	</operation>
+</file>
+</modification>
