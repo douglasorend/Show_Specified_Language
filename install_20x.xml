@@ -3,13 +3,13 @@
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 <id>Dougiefresh:ShowSpecLang</id>
 <name>Show Only Specified Language</name>
-<version>1.0</version>
+<version>1.1</version>
 
-<file name="$sourcedir/Subs.php">
+<file name="$sourcedir/Display.php">
 	<operation>
-		<search position="after"><![CDATA[// The non-breaking-space looks a bit different each time.]]></search>
-		<add><![CDATA[// Check for language specific text for posts:
-	BBCode_Language_Embed($message, $smileys, $cache_id, $parse_tags);
+		<search position="after"><![CDATA[if (empty($options['view_newest_first']))
+		$counter++;]]></search>
+		<add><![CDATA[SLBBC_prepareDisplayContext($output, $message);
 
 	]]></add>
 	</operation>

@@ -1,5 +1,5 @@
 [hr]
-[center][color=red][size=16pt][b]SHOW SPECIFIED LANGUAGE v1.0[/b][/size][/color]
+[center][color=red][size=16pt][b]SHOW SPECIFIED LANGUAGE v1.1[/b][/size][/color]
 [url=http://www.simplemachines.org/community/index.php?action=profile;u=253913][b]By Dougiefresh[/b][/url] -> [url=http://custom.simplemachines.org/mods/index.php?mod=4103]Link to Mod[/url]
 [/center]
 [hr]
@@ -22,7 +22,7 @@ Either the 2-character language code (ex: [b]en[/b]) or the 5-character code (ex
 If the user's language is not found, the code will either display the preferred default language (if specified) [b]OR[/b] the first language code encountered.
 
 [color=blue][b][size=12pt][u]Admin Settings[/u][/size][/b][/color]
-In [b]Admin[/b] -> [b]Configuration[/b] -> [b]Modification Settings[/b], there is a new setting: [b]Default language by language bbcode[/b].  This setting is a language code, as defined by the [url=http://www.lingoes.net/en/translator/langcode.htm]ISO Language Code Table[/url].
+There are no admin settings in this mod.
 
 [color=blue][b][size=12pt][u]Related Discussion[/u][/size][/b][/color]
 o [url=http://www.simplemachines.org/community/index.php?topic=544405.0]Support for multiple languages![/url]

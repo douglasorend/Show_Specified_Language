@@ -12,66 +12,60 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function BBCode_Language(&$bbc)
+//=================================================================================
+// Admin hook functions to add the options and bbcode to the forum:
+//=================================================================================
+function SLBBC(&$bbc)
 {
-	global $modSettings;
+	global $txt;
 
 	// Format: [language=x]{parsed text}[/language]
 	$bbc[] = array(
 		'tag' => 'language',
-		'type' => 'unparsed_commas_content',
-		'content' => '',	// < == Nope, not a mistake!!!
-		'trim' => 'both',
+		'type' => 'unparsed_commas',
+		'before' => '<div class="slbbc_$1">',
+		'after' => '</div>',
+		'trim' => 'outside',
+		'block_level' => true,
 	);
 	// Format: [language]{parsed text}[/language]
 	$bbc[] = array(
 		'tag' => 'language',
-		'before' => '',
+		'before' => '<div class="slbbc_' . strtolower($txt["lang_dictionary"]) . '">',
 		'after' => '',
+		'trim' => 'outside',
+		'block_level' => true,
 	);
 }
 
-function BBCode_Language_Embed(&$message, &$smileys, &$cache_id, &$parse_tags)
+//=================================================================================
+// Function to determine which language DIV to show to the user:
+//=================================================================================
+function SLBBC_prepareDisplayContext(&$output, &$message)
 {
-	global $txt, $modSettings, $context;
-	static $user_lang = null, $def_locale, $def_dictionary;
-
-	// Make sure we've lowercased all possible proper responses from the language file!
-	if ($user_lang == null)
-	{
-		$user_lang = strtolower($txt["lang_dictionary"]);
-		$def_locale = !empty($modSettings['SLBBC_Default']) ? strtolower($modSettings['SLBBC_Default']) : '';
-		$def_dictionary = substr($def_locale, 0, 2);
-	}
+	global $context, $txt;
 
 	// Find all language bbcodes in the post's message:
-	$pattern = '#\[language=(.+?)\]#i' . ($u = ($context['utf8'] ? 'u' : ''));
-	if (preg_match_all($pattern, $message, $matches, PREG_PATTERN_ORDER))
+	$pattern = '#\<div class="slbbc_([\w\-]+?)"#i' . ($u = ($context['utf8'] ? 'u' : ''));
+	if (preg_match_all($pattern, $output['body'], $matches, PREG_PATTERN_ORDER))
 	{
-		// We've got matches!!!  Let's search them for the user's language:
-		$found = 0;
-		foreach ($matches[1] as $id => $match)
+		// Determine the unique language codes used:
+		$matches = array_unique($matches[1]);
+		$user_lang = strtolower($txt["lang_dictionary"]);
+		$list = array();
+		$first_lang = false;
+		foreach ($matches as $match)
 		{
-			// Found a match for user language?
-			$matches[1][$id] = $match = substr(strtolower($match), 0, 2);
-			if ($match == $user_lang)
-			{
-				$message = preg_replace('#\[language=' . $match . '(|_[\w]{2})\]#i' . $u, '[language]', $message);
-				return;
-			}
-			// Found default dictionary or locale match?
-			elseif ($match == $def_locale)
-				$found = $id;
+			$first_lang = (empty($first_lang) || $match == $user_lang ? $match : $first_lang);
+			$list[$match] = $match;
 		}
-
-		// Transform specified "[language=?]" into "[language]":
-		$message = preg_replace('#\[language=' . $matches[1][$id] . '(|_[\w]{2})\]#i' . $u, '[language]', $message);
+		$context['SLBBC_lang'] = $list;
+		
+		// Replace the "slbbc" with "slbbc<post_id>" and hide all non-selected languages:
+		foreach ($list as $src => $dst)
+			$output['body'] = str_replace('<div class="slbbc_' . $src . '"', '<div class="slbbc' . $output['id'] . '_' . $dst . '"' . ($first_lang == $dst ? '' : ' style="display: none;"'), $output['body']);
 	}
-}
-
-function BBCode_Language_Options(&$config_vars)
-{
-	$config_vars[] = array('text', 'SLBBC_Default', 5, 'javascript' => ' maxlength="5"');
+	return $output;
 }
 
 ?>

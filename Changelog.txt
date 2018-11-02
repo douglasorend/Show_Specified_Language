@@ -1,2 +1,8 @@
-v1.0 - Unpublished
+v1.1 - September 20th, 2016
+o Complete rewrite of bbcode code functions.
+o All language sections are now included in the HTML output, except they are hidden.
+o All admin options removed from the mod.
+o SMF 2.1: Different hook used to perform similar function.
+
+v1.0 - March 30th, 2016
 o Initial release to the public

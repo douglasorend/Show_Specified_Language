@@ -20,11 +20,11 @@ if (SMF == 'SSI')
 	
 // Define the hooks
 $hook_functions = array(
+// SMF 2.0+ hooks:
 	'integrate_pre_include' => '$sourcedir/Subs-BBCode-Language.php',
-	'integrate_bbc_codes' => 'BBCode_Language',
-	'integrate_general_mod_settings' => 'BBCode_Language_Options',
-// SMF 2.1+ Hooks below this line:
-	'integrate_pre_parsebbc' => 'BBCode_Language_Embed',
+	'integrate_bbc_codes' => 'SLBBC',
+// SMF 2.1 hooks:
+	'integrate_prepare_display_context' => 'SLBBC_prepareDisplayContext',
 );
 
 // Adding or removing them?
